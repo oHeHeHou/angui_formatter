@@ -7,12 +7,15 @@ for root, dirs, files in os.walk('.'):
     for file in files:
         if file.endswith('xls'):
             print('文件名:{0}'.format(file))
+            suffix_index = file.rindex('.xls')
+            file_prefix = file[0:suffix_index]
+
             book = xlrd.open_workbook(file)
             print("Sheet数量： {0}".format(book.nsheets))
             print("Sheet名称: {0}".format(book.sheet_names()))
 
             document = Document()
-            document.add_heading('安规题库', 0)
+            document.add_heading(file_prefix, 0)
 
             for i, sh in enumerate(book.sheets()):
                 sh_name = sh.name
@@ -52,6 +55,5 @@ for root, dirs, files in os.walk('.'):
                         document.add_paragraph(row_choice)
                     # 写入答案
                     document.add_paragraph(row_hint)
-                    suffix_index = file.rindex('.xls')
-                    out_file_name = file[0:suffix_index] + '.docx'
+                    out_file_name = file_prefix + '.docx'
                     document.save(out_file_name)
