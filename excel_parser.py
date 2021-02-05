@@ -3,6 +3,10 @@ import os
 import xlrd
 from docx import Document
 
+content_header_index = 0
+choice_header_index = 0
+answer_header_index = 0
+
 for root, dirs, files in os.walk('.'):
     for file in files:
         if file.endswith('xls'):
@@ -23,10 +27,21 @@ for root, dirs, files in os.walk('.'):
                 document.add_heading(sh_name, level=1)
                 for rx in range(sh.nrows):
                     if rx == 0:
+                        row_content = sh.row(rx)
+
+                        # 记录表头中对应列的序号，用于后面获取内容
+                        for index, row in enumerate(row_content):
+                            header = row.value
+                            if '题目' in header:
+                                content_header_index = index
+                            elif '选项' in header:
+                                choice_header_index = index
+                            elif '正确答案' in header:
+                                answer_header_index = index
                         continue
                     row_content = sh.row(rx)
                     # 题目
-                    row_subject = str(row_content[2].value).strip()
+                    row_subject = str(row_content[content_header_index].value).strip()
                     # 判断题后面加括号
                     if '判断' in sh_name:
                         try:
@@ -38,11 +53,11 @@ for root, dirs, files in os.walk('.'):
                     else:
                         row_subject = row_subject.replace('（）', '(    )')
                         row_subject = row_subject.replace('()', '(    )')
-                    row_choice = str(row_content[3].value).strip()
+                    row_choice = str(row_content[choice_header_index].value).strip()
                     # 选项
                     row_choice = row_choice.replace('|', '   ')
                     # 答案
-                    row_answer = str(row_content[4].value).strip()
+                    row_answer = str(row_content[answer_header_index].value).strip()
                     if '判断' in sh_name:
                         if 'A' in row_answer:
                             row_answer = '正确'
