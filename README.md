@@ -3,11 +3,11 @@
 
 原有格式：
 
-![](.imgs/src.png)
+![](./imgs/src.png)
 
 转换后格式：
 
-![](.imgs/out.png)
+![](./imgs/out.png)
 
 
 ## 说明
