@@ -6,7 +6,8 @@ import xlwt
 # https://www.kaoshibao.com/
 '''
 # 要转的文件名称
-file = '信息专业一般工作人员安规题库.xls'
+# file = '信息专业一般工作人员安规题库.xls'
+file = '04变电专业一般工作人员安规题库.xls'
 print('文件名:{0}'.format(file))
 suffix_index = file.rindex('.xls')
 file_prefix = file[0:suffix_index]
@@ -46,18 +47,20 @@ for sh in sheets:
             for index, row in enumerate(row_content):
                 header = row.value
                 if '题型' in header:
-                    subject_header_index = index
+                    type_header_index = index
                 elif '题目' in header:
+                # elif '题干' in header:
                     content_header_index = index
                 elif '选项' in header:
                     choice_header_index = index
                 elif '正确答案' in header:
+                # elif '答案' in header:
                     answer_header_index = index
             continue
 
         row_content = sh.row(rx)
         # 题目
-        row_subject = str(row_content[subject_header_index].value).strip()
+        row_subject = str(row_content[content_header_index].value).strip()
         row_choice = str(row_content[choice_header_index].value).strip()
         # 选项
         row_choice_list = row_choice.split('|')
